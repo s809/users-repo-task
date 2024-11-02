@@ -17,7 +17,10 @@ class UserRepository {
 
     public function __construct() {
         try {
-            $this->mysqli = new \mysqli(...Config::DB_PARAMS);
+            $this->mysqli = mysqli_init();
+            $this->mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, Config::CONNECT_TIMEOUT);
+            $this->mysqli->real_connect(...Config::DB_PARAMS);
+
             $this->createStmt = $this->mysqli->prepare("INSERT INTO users(full_name, role, efficiency) VALUES (?, ?, ?)");
             $this->getAllStmt = $this->mysqli->prepare("SELECT * FROM users");
             $this->getByIdStmt = $this->mysqli->prepare("SELECT * FROM users WHERE id = ?");
